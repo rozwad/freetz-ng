@@ -1,0 +1,16 @@
+--- etc/hotplug/udev-printer-lp
++++ etc/hotplug/udev-printer-lp
+@@ -47,6 +47,13 @@
+ fi
+ done
+ echo "${MANU:=USB}:${PROD:=Printer}"|tr "_" " " > $PRINTER_ID_FILE
++FIRMWARE=/var/mod/hotplug/sihp1018.dl
++if [ -f $FIRMWARE && `cat $PRINTER_ID_FILE` | grep -q "HP LaserJet 1018" ]; then
++sleep 1
++echo "Sending firmware to printer..." >> /var/log/hp
++cat $FIRMWARE > $USB_DEVICE
++echo "`date` : done." >> /var/log/hp
++fi
+ ## Starting printserver...
+ local STARTED=0
+ if $PRINTSERV -d $USB_DEVICE -p $PORT -c $CONSOLE ; then
